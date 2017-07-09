@@ -18,7 +18,7 @@ module BulkSMS
         status_string::AbstractString
         id::Int
         function BulkSMSResponse(response::Response)
-            s = readall(response)
+            s = readstring(response)
             statusCode, statusString, Id = split(s, "|")
             new(parse(Int64, statusCode), statusString, parse(Int64, Id))
         end
@@ -78,7 +78,7 @@ module BulkSMS
 
     function send(client::BulkSMSClient, message_text::AbstractString; msisdn=nothing, action_when_long::ActionWhenLong=shorten)
 
-        if is(msisdn, nothing)
+        if msisdn === nothing
             msisdn = client.msisdn
         end
 

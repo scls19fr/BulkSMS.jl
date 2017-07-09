@@ -7,7 +7,7 @@ A Julia package to send SMS (Short Message Service) using [BulkSMS API](http://w
 ## Install
 
 ```julia
-Pkg.clone("https://github.com/scls19fr/BulkSMS.jl.git")
+Pkg.clone("https://github.com/scls19fr/BulkSMS.jl")
 ```
 
 ## Usage
@@ -15,4 +15,4 @@ Pkg.clone("https://github.com/scls19fr/BulkSMS.jl.git")
 [See example](sample/send_message.jl)
 
 ## See also
- - [Pushover.jl](A Julia package to send notifications using the Pushover Notification Service)
+ - [Pushover.jl](https://github.com/scls19fr/PushOver.jl) - A Julia package to send notifications using the Pushover Notification Service
