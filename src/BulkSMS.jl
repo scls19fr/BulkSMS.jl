@@ -9,11 +9,11 @@ module BulkSMS
     _DEFAULT_BASE_URL = "http://bulksms.vsms.net:5567"
     _DEFAULT_MAX_MESSAGE_LEN = 160
 
-    mutable struct BulkSMSClientException <: Exception
+    struct BulkSMSClientException <: Exception
         s::AbstractString
     end
 
-    mutable struct BulkSMSResponse
+    struct BulkSMSResponse
         status_code::Int
         status_string::AbstractString
         id::Int
@@ -25,7 +25,7 @@ module BulkSMS
     end
 
 
-    mutable struct BulkSMSClient
+    struct BulkSMSClient
         msisdn::AbstractString
         username::AbstractString
         password::AbstractString
