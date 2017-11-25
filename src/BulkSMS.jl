@@ -1,18 +1,41 @@
+"""
+A Julia package to send SMS (Short Message Service) using 
+[BulkSMS API](http://www.bulksms.com/products/sms-api.htm) 
+(more exactly [HTTP to SMS API](http://www.bulksms.com/products/api/http-to-sms.htm))
+"""
 module BulkSMS
 
     export BulkSMSClient, send, shorten, multiple
 
     using Requests: get, Response
 
+    """
+        ActionWhenLong
+
+    Enumeration that defines how long message treated
+
+    - `shorten`: if message is too long, it will we shorten.
+    - `multiple`: if message is too long, several messages will be sent
+    """
     @enum ActionWhenLong shorten=1 multiple=2
 
     _DEFAULT_BASE_URL = "http://bulksms.vsms.net:5567"
     _DEFAULT_MAX_MESSAGE_LEN = 160
 
+    """
+        BulkSMSClientException(s)
+
+    BulkSMS client exception.
+    """
     struct BulkSMSClientException <: Exception
         s::AbstractString
     end
 
+    """
+        BulkSMSResponse(response)
+
+    BulkSMS response (from `response::Requests.Response`).
+    """
     struct BulkSMSResponse
         status_code::Int
         status_string::AbstractString
@@ -24,7 +47,13 @@ module BulkSMS
         end
     end
 
-
+    """
+        BulkSMSClient(msisdn, username, password;
+                base_url=_DEFAULT_BASE_URL,
+                max_message_len=_DEFAULT_MAX_MESSAGE_LEN)
+    
+    Create a client that can connect to BulkSMS HTTP to SMS API.
+    """
     struct BulkSMSClient
         msisdn::AbstractString
         username::AbstractString
@@ -40,7 +69,10 @@ module BulkSMS
         end
     end
 
-
+    """
+        _crop(msg, max_len) -> cropped_msg
+    Crop a `message` to `max_len`.
+    """
     function _crop(msg, max_len)
         if max_len > 0 && length(msg) > max_len
             msg[1:max_len-3] * "..."
@@ -49,6 +81,13 @@ module BulkSMS
         end
     end
 
+    """
+        _send(client, message_text, msisdn)
+
+    Send a text message `message_text` using `client`.
+
+    This is a "low level" function. You should probably use `send(...)` insted of `_send(...)`
+    """
     function _send(client::BulkSMSClient, message_text::AbstractString, msisdn::AbstractString)
         endpoint = "/eapi/submission/send_sms/2/2.0"
 
@@ -76,6 +115,11 @@ module BulkSMS
         response
     end
 
+    """
+        send(client, message_text; msisdn=nothing, action_when_long::ActionWhenLong=shorten)
+
+    Send a text message `message_text` to BulkSMS using HTTP to SMS API with BulkSMSClient `client`.
+    """
     function send(client::BulkSMSClient, message_text::AbstractString; msisdn=nothing, action_when_long::ActionWhenLong=shorten)
 
         if msisdn === nothing
