@@ -41,7 +41,7 @@ module BulkSMS
         status_string::AbstractString
         id::Int
         function BulkSMSResponse(response::Response)
-            s = readstring(response)
+            s = read(response, String)
             statusCode, statusString, Id = split(s, "|")
             new(parse(Int64, statusCode), statusString, parse(Int64, Id))
         end
