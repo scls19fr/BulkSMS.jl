@@ -7,7 +7,7 @@ module BulkSMS
 
     export BulkSMSClient, send, shorten, multiple
 
-    using Requests: get, Response
+    using HTTP
 
     """
         ActionWhenLong
@@ -17,7 +17,10 @@ module BulkSMS
     - `shorten`: if message is too long, it will we shorten.
     - `multiple`: if message is too long, several messages will be sent
     """
-    @enum ActionWhenLong shorten=1 multiple=2
+    @enum ActionWhenLong begin
+        shorten = 1
+        multiple = 2
+    end
 
     _DEFAULT_BASE_URL = "http://bulksms.vsms.net:5567"
     _DEFAULT_MAX_MESSAGE_LEN = 160
@@ -40,8 +43,8 @@ module BulkSMS
         status_code::Int
         status_string::AbstractString
         id::Int
-        function BulkSMSResponse(response::Response)
-            s = readstring(response)
+        function BulkSMSResponse(response::HTTP.Messages.Response)
+            s = String(response.body)
             statusCode, statusString, Id = split(s, "|")
             new(parse(Int64, statusCode), statusString, parse(Int64, Id))
         end
@@ -99,8 +102,10 @@ module BulkSMS
             "message" => message_text,
             "msisdn" => msisdn
         )
-
-        raw_response = get(url; query = params)
+        
+        @debug "GET $url with query=$params"
+        raw_response = HTTP.request("GET", url; query = params)
+        @debug raw_response
 
         if raw_response.status != 200
             throw(BulkSMSClientException("HTTP status code != 200"))
