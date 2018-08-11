@@ -22,4 +22,4 @@ script:
 # Documenter auto-deploy                                                                                                                                                                                                                            
 # following `using` instruction is for triggering precompilation                                                                                                                                                                                    
   - julia -e 'using Pkg; Pkg.add("Documenter")'                                                                                                                                                                                                                  
-  - julia -e 'cd(Pkg.dir("BulkSMS", "docs")); include("make.jl")'
+  - julia -e 'import BulkSMS; joinpath(dirname(pathof(BulkSMS)), "..", paths...); include("make.jl")'
