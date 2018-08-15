@@ -16,6 +16,10 @@ matrix:
 notifications:
   email: false
 # uncomment the following lines to override the default test script
-#script:
+script:
 #  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
 #  - julia -e 'Pkg.clone(pwd()); Pkg.build("BulkSMS"); Pkg.test("BulkSMS"; coverage=true)'
+# Documenter auto-deploy                                                                                                                                                                                                                            
+# following `using` instruction is for triggering precompilation                                                                                                                                                                                    
+  - julia -e 'using Pkg; Pkg.add("Documenter")'
+  - julia -e 'using Pkg; Pkg.add("BulkSMS"); import BulkSMS; cd(joinpath(dirname(pathof(BulkSMS)), "..", "docs")); include("make.jl")'
