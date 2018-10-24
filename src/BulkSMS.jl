@@ -14,7 +14,7 @@ module BulkSMS
 
     Enumeration that defines how long message treated
 
-    - `shorten`: if message is too long, it will we shorten.
+    - `shorten`: if message is too long, it will be shorten.
     - `multiple`: if message is too long, several messages will be sent
     """
     @enum ActionWhenLong begin
