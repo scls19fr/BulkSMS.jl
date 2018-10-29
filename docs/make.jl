@@ -12,7 +12,7 @@ makedocs(
 
 deploydocs(
     repo = "github.com/scls19fr/BulkSMS.jl.git",
-    julia  = "0.7",
+    julia  = "1.0",
     latest = "master",
     target = "build",
     deps = nothing,  # we use the `format = :html`, without `mkdocs`
