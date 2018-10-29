@@ -15,11 +15,15 @@ matrix:
   - julia: nightly
 notifications:
   email: false
-# uncomment the following lines to override the default test script
-# script:
-#  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
-#  - julia -e 'Pkg.clone(pwd()); Pkg.build("BulkSMS"); Pkg.test("BulkSMS"; coverage=true)'
-# Documenter auto-deploy                                                                                                                                                                                                                            
-# following `using` instruction is for triggering precompilation                                                                                                                                                                                    
-#   - julia -e 'using Pkg; Pkg.add("Documenter")'
-#   - julia -e 'using Pkg; Pkg.add("BulkSMS"); import BulkSMS; cd(joinpath(dirname(pathof(BulkSMS)), "..", "docs")); include("make.jl")'
+
+# https://juliadocs.github.io/Documenter.jl/latest/man/hosting/#.travis.yml-Configuration-1
+jobs:
+  include:
+    - stage: "Documentation"
+      julia: 1.0
+      os: linux
+      script:
+        - julia --project=docs/ -e 'using Pkg; Pkg.instantiate();
+                                    Pkg.develop(PackageSpec(path=pwd()))'
+        - julia --project=docs/ docs/make.jl
+      after_success: skip
